@@ -1,0 +1,237 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MultiSigState",
+  "sourceName": "contracts/MultiSigWallet2.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "ContractBalance",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC20Deposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "ERC20TransactionExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "ContractBalance",
+          "type": "uint256"
+        }
+      ],
+      "name": "EthDeposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "EthTransactionExecuted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "nftContract",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "ContractBalance",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTDeposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTTransactionExecuted",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "executed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isOwner",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "nonce",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "owners",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b506001600081905550610391806100286000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c8063025e7c27146100515780632f54bf6e14610081578063a9fcfb33146100b1578063affed0e0146100e1575b600080fd5b61006b600480360381019061006691906101b6565b6100ff565b6040516100789190610224565b60405180910390f35b61009b6004803603810190610096919061026b565b610135565b6040516100a891906102b3565b60405180910390f35b6100cb60048036038101906100c69190610304565b610155565b6040516100d891906102b3565b60405180910390f35b6100e9610175565b6040516100f69190610340565b60405180910390f35b6002816004811061010f57600080fd5b016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60086020528060005260406000206000915054906101000a900460ff1681565b60076020528060005260406000206000915054906101000a900460ff1681565b60015481565b600080fd5b6000819050919050565b61019381610180565b811461019e57600080fd5b50565b6000813590506101b08161018a565b92915050565b6000602082840312156101cc576101cb61017b565b5b60006101da848285016101a1565b91505092915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061020e826101e3565b9050919050565b61021e81610203565b82525050565b60006020820190506102396000830184610215565b92915050565b61024881610203565b811461025357600080fd5b50565b6000813590506102658161023f565b92915050565b6000602082840312156102815761028061017b565b5b600061028f84828501610256565b91505092915050565b60008115159050919050565b6102ad81610298565b82525050565b60006020820190506102c860008301846102a4565b92915050565b6000819050919050565b6102e1816102ce565b81146102ec57600080fd5b50565b6000813590506102fe816102d8565b92915050565b60006020828403121561031a5761031961017b565b5b6000610328848285016102ef565b91505092915050565b61033a81610180565b82525050565b60006020820190506103556000830184610331565b9291505056fea26469706673582212200ac349e3c59ebb4201162e397d68016ffe443625ff3f4d59e38449e1e42a43e064736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c8063025e7c27146100515780632f54bf6e14610081578063a9fcfb33146100b1578063affed0e0146100e1575b600080fd5b61006b600480360381019061006691906101b6565b6100ff565b6040516100789190610224565b60405180910390f35b61009b6004803603810190610096919061026b565b610135565b6040516100a891906102b3565b60405180910390f35b6100cb60048036038101906100c69190610304565b610155565b6040516100d891906102b3565b60405180910390f35b6100e9610175565b6040516100f69190610340565b60405180910390f35b6002816004811061010f57600080fd5b016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60086020528060005260406000206000915054906101000a900460ff1681565b60076020528060005260406000206000915054906101000a900460ff1681565b60015481565b600080fd5b6000819050919050565b61019381610180565b811461019e57600080fd5b50565b6000813590506101b08161018a565b92915050565b6000602082840312156101cc576101cb61017b565b5b60006101da848285016101a1565b91505092915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061020e826101e3565b9050919050565b61021e81610203565b82525050565b60006020820190506102396000830184610215565b92915050565b61024881610203565b811461025357600080fd5b50565b6000813590506102658161023f565b92915050565b6000602082840312156102815761028061017b565b5b600061028f84828501610256565b91505092915050565b60008115159050919050565b6102ad81610298565b82525050565b60006020820190506102c860008301846102a4565b92915050565b6000819050919050565b6102e1816102ce565b81146102ec57600080fd5b50565b6000813590506102fe816102d8565b92915050565b60006020828403121561031a5761031961017b565b5b6000610328848285016102ef565b91505092915050565b61033a81610180565b82525050565b60006020820190506103556000830184610331565b9291505056fea26469706673582212200ac349e3c59ebb4201162e397d68016ffe443625ff3f4d59e38449e1e42a43e064736f6c63430008110033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
