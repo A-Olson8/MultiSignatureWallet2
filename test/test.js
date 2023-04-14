@@ -68,8 +68,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr5).transferEth(addr1.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWith(
-        "not owner");   
+        (core.connect(addr5).transferEth(addr1.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWithCustomError(core,  
+        "notOwner");   
     });
 
     // This function tests that the nonce increases everytime there is a successful transfer
@@ -128,8 +128,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr4).transferEth(addr1.address, '1000000000000000001', arrayOfSigs)).to.be.revertedWith(
-        "Ether balance too low");
+        (core.connect(addr4).transferEth(addr1.address, '1000000000000000001', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "EtherBalanceTooLow");
     });
 
     it("should revert ERC20 transfer", async () => {
@@ -147,8 +147,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
   
       await expect
-        (core.connect(addr4).transferErc20(token.address, addr1.address, '1000000000000000001', arrayOfSigs)).to.be.revertedWith(
-        "Token balance too low");
+        (core.connect(addr4).transferErc20(token.address, addr1.address, '1000000000000000001', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "TokenBalanceTooLow");
     });
 
     it("should revert NFT transfer", async () => {
@@ -172,8 +172,8 @@ describe("MultiSig contract", function () {
       await core.transferNFT(nft.address, addr2.address, 1, arrayOfSigs);
   
       await expect
-        (core.connect(addr4).transferNFT(nft.address, addr1.address, 1, arrayOfSigs2)).to.be.revertedWith(
-        "Contract does not own token");
+        (core.connect(addr4).transferNFT(nft.address, addr1.address, 1, arrayOfSigs2)).to.be.revertedWithCustomError(core, 
+        "ContractDoesNotOwnToken");
     });
 
 
@@ -194,8 +194,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr4).transferEth(addr2.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");   
+        (core.connect(addr4).transferEth(addr2.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");   
     });
 
     it("should revert ERC20 invalid hash", async () => {
@@ -213,8 +213,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
   
       await expect
-        (core.connect(addr4).transferErc20(token.address, addr5.address, '100000000000000000', arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");
+        (core.connect(addr4).transferErc20(token.address, addr5.address, '100000000000000000', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");
     });
 
     it("should revert NFT invalid hash", async () => {
@@ -231,8 +231,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
   
       await expect
-        (core.connect(addr4).transferNFT(nft.address, addr2.address, 0, arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");
+        (core.connect(addr4).transferNFT(nft.address, addr2.address, 0, arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");
     });
 
  
@@ -256,8 +256,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr4).transferEth(addr5.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");   
+        (core.connect(addr4).transferEth(addr5.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");   
     });
 
     it("should revert getTokenTransferHash for eth transfer part 2", async () => {
@@ -275,8 +275,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr4).transferEth(addr5.address, 1, arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");   
+        (core.connect(addr4).transferEth(addr5.address, 1, arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");   
     });
 
     it("should revert can't use getEthTransferHash for ERC20 transfer", async () => {
@@ -294,8 +294,8 @@ describe("MultiSig contract", function () {
       const arrayOfSigs = [add1Hash, add2Hash, add3Hash, add4Hash];
 
       await expect
-        (core.connect(addr4).transferErc20(token.address, addr1.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWith(
-        "invalid sig");
+        (core.connect(addr4).transferErc20(token.address, addr1.address, '1000000000000000000', arrayOfSigs)).to.be.revertedWithCustomError(core,
+        "InvalidSig");
     });
 
     it("should revert can't use NFT hash for ERC20 transfer", async () => {
