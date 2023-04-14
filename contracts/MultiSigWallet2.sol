@@ -6,6 +6,13 @@ import '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 
+error notOwner();
+error EtherBalanceTooLow();
+error TokenBalanceTooLow();
+error ContractDoesNotOwnToken();
+error TransactionExecuted();
+error InvalidSig();
+
 contract MultiSigState is ReentrancyGuard {
     event EthDeposited(address indexed sender, uint indexed amount, uint indexed ContractBalance);
     event ERC20Deposited(address indexed sender, address indexed token, uint indexed amount, uint ContractBalance);
@@ -16,13 +23,16 @@ contract MultiSigState is ReentrancyGuard {
 
     uint public nonce;
     address[4] public owners; // array of owners
-    address testContract;  // used so that MultiSigWallet2.t.sol can bypass onlyOwner
     mapping(bytes32 => bool) public executed;  // used to confirm address is an owner;
     mapping(address => bool) public isOwner;  // used for modifier
 
     modifier onlyOwners() {  // EthTransactionExecuted/checks that msg.sender is an owner
-        require(isOwner[msg.sender] || msg.sender == testContract, "not owner");
+        checkOwner();
         _;
+    }
+
+    function checkOwner() private view {
+        if(!isOwner[msg.sender]) {revert notOwner();}
     }
 }
 
@@ -51,19 +61,20 @@ contract MultiSigTransferLogic is MultiSigState {
 
     // pass in the two sigs and the _txHash itself; (the one hash can be signed by the two addresses;
     function _checkSigs(
-        bytes[] memory _sigs, 
+        bytes[] calldata _sigs, 
         bytes32 _txHash) 
         private view returns (bool) {
 
         bytes32 ethSignedHash = _txHash.toEthSignedMessageHash(); // this odd syntax is because ECDSA is an openzeppelin library.  (_txHash is a param)
 
-        for (uint i = 0; i < _sigs.length; i++) { // for all signatures
+        for (uint i; i < _sigs.length;) { // for all signatures
             address signer = ethSignedHash.recover(_sigs[i]);  // verify that they were signed by the two owners
             bool valid = signer == owners[i];  // the bool is checking that signer of the sigs is the two owners
 
             if (!valid) {
                 return false;  // if the signer is not the two owners, then it is falso;
             }
+            unchecked{ ++i; }
         }
 
         return true; // otherwise, it is true;
@@ -73,15 +84,15 @@ contract MultiSigTransferLogic is MultiSigState {
     function transferEth(
         address _to, 
         uint _amount, 
-        bytes[] memory _sigs) 
+        bytes[] calldata _sigs) 
         external onlyOwners nonReentrant {
-        require(address(this).balance >= _amount, "Ether balance too low");
+        if(address(this).balance < _amount) {revert EtherBalanceTooLow();}
 
-        nonce++;
+        ++nonce;
         uint _nonce = nonce;
         bytes32 txHash = getEthTransferHash(_to, _amount, _nonce); //recreates hash for the next two checks;
-        require(!executed[txHash], "tx executed");
-        require(_checkSigs(_sigs, txHash), "invalid sig");
+        if(executed[txHash]) {revert TransactionExecuted();}
+        if(!_checkSigs(_sigs, txHash)) {revert InvalidSig();}
 
         executed[txHash] = true;
 
@@ -96,15 +107,15 @@ contract MultiSigTransferLogic is MultiSigState {
         address _tokenAddress, 
         address _to, 
         uint _amount, 
-        bytes[] memory _sigs) 
+        bytes[] calldata _sigs) 
         external onlyOwners {
-        require(IERC20(_tokenAddress).balanceOf(address(this)) >= _amount, "Token balance too low");
+        if(IERC20(_tokenAddress).balanceOf(address(this)) < _amount) {revert TokenBalanceTooLow();}
 
-        nonce++;
+        ++nonce;
         uint _nonce = nonce;
         bytes32 txHash = getTokenTransferHash(_tokenAddress, _to, _amount, _nonce); //recreates hash for the next two checks;
-        require(!executed[txHash], "tx executed");
-        require(_checkSigs(_sigs, txHash), "invalid sig");
+        if(executed[txHash]) {revert TransactionExecuted();}
+        if(!_checkSigs(_sigs, txHash)) {revert InvalidSig();}
 
         executed[txHash] = true;
 
@@ -118,15 +129,15 @@ contract MultiSigTransferLogic is MultiSigState {
         address _tokenAddress, 
         address _to, 
         uint _tokenId, 
-        bytes[] memory _sigs) 
+        bytes[] calldata _sigs) 
         external onlyOwners {
-        require(IERC721(_tokenAddress).ownerOf(_tokenId) == address(this), "Contract does not own token");
+        if(IERC721(_tokenAddress).ownerOf(_tokenId) != address(this)) {revert ContractDoesNotOwnToken();}
 
-        nonce++;
+        ++nonce;
         uint _nonce = nonce;
         bytes32 txHash = getTokenTransferHash(_tokenAddress, _to, _tokenId, _nonce); //recreates hash for the next two checks;
-        require(!executed[txHash], "tx executed"); 
-        require(_checkSigs(_sigs, txHash), "invalid sig");
+        if(executed[txHash]) {revert TransactionExecuted();}
+        if(!_checkSigs(_sigs, txHash)) {revert InvalidSig();}
 
         executed[txHash] = true;  
 
@@ -182,8 +193,6 @@ contract MultiSigCore is MultiSigDepositLogic {
        isOwner[_listOfOwners[1]] = true;
        isOwner[_listOfOwners[2]] = true;
        isOwner[_listOfOwners[3]] = true;
-
-       testContract = msg.sender;
     }
 
     function getEtherBalance() external view returns(uint) {
